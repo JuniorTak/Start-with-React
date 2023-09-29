@@ -2,29 +2,48 @@ import { plantList } from '../datas/plantList'
 import '../styles/ShoppingList.css'
 import PlantItem from './PlantItem'
 
-function ShoppingList() {
-    let cat = []
+function ShoppingList({ cart, updateCart }) {
+    
+    let categories = []
     plantList.forEach(myFunction)
     function myFunction(item) {
-        if(!cat.includes(item.category)) cat.push(item.category)
+        if(!categories.includes(item.category)) categories.push(item.category)
     }
-	return (
+    /*// Other way to get categories
+    const categories = plantList.reduce(
+        (acc, elem) =>
+            acc.includes(elem.category) ? acc : acc.concat(elem.category),
+            []
+    )
+    */
+   
+	function addToCart(name, price) {
+		const currentPlantAdded = cart.find((plant) => plant.name === name)
+		if (currentPlantAdded) {
+			const cartFilteredCurrentPlant = cart.filter(
+				(plant) => plant.name !== name
+			)
+			updateCart([
+				...cartFilteredCurrentPlant,
+				{ name, price, amount: currentPlantAdded.amount + 1 }
+			])
+		} else {
+			updateCart([...cart, { name, price, amount: 1 }])
+		}
+	}
+    
+    return (
         <>
-        <ul>{cat.map((cat) => 
+        <ul className='lmj-plant-cat'>{categories.map((cat) => 
             <li key={cat}>{cat}</li>
         )}</ul>
         <ul className='lmj-plant-list'>
-            {plantList.map(({id, cover, name, isBestSale, water, light}) => (
-                <li key={id}>
-                    <PlantItem
-                    cover={cover}
-                    name={name}
-                    water={water}
-                    light={light}
-                    isBestSale ={isBestSale}
-                    />
-                </li>
-			))}
+            {plantList.map(({ id, cover, name, water, light, price }) => (
+                <div key={id}>
+                    <PlantItem cover={cover} name={name} water={water} light={light} />
+                    <button onClick={() => addToCart(name, price)}>Ajouter</button>
+                </div>
+            ))}
         </ul>
         </>
     )

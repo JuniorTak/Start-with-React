@@ -7,7 +7,7 @@ import '../styles/ShoppingList.css'
 
 function ShoppingList({ cart, updateCart }) {
 
-    const [activeCategory, setActiveCategory] = useState('')
+    const [activeCategory, setActiveCategory] = useState('') // useState declared to the parent component
     
     let categories = []
     plantList.forEach(myFunction)
@@ -45,10 +45,17 @@ function ShoppingList({ cart, updateCart }) {
                     activeCategory={activeCategory}
             />
             <ul className='lmj-plant-list'>
-                {plantList.map(({ id, cover, name, water, light, price, category }) => 
+                {plantList.map(({ id, cover, name, water, light, price, isBestSale, category }) => 
                     !activeCategory || activeCategory === category ? (
                         <div key={id}>
-                            <PlantItem cover={cover} name={name} water={water} light={light} />
+                            <PlantItem 
+                                cover={cover}
+                                name={name}
+                                water={water}
+                                light={light}
+                                price={price}
+                                isBestSale={isBestSale}
+                            />
                             <button onClick={() => addToCart(name, price)}>Ajouter</button>
                         </div>
                     ) : null

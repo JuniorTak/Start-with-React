@@ -1,12 +1,17 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import '../styles/Cart.css'
 
 function Cart({ cart, updateCart }) {
-	const [isOpen, setIsOpen] = useState(true)
+	const [isOpen, setIsOpen] = useState(true) // useSate
 	const total = cart.reduce(
 		(acc, plantType) => acc + plantType.amount * plantType.price,
 		0
 	)
+	
+	// useEffect triggered when values of total or activeCategory change
+	useEffect(() => {
+		document.title = `LMJ: ${total}€ d'achats`  //alert(`J'aurai ${total}€ à payer 💸`)
+	}, [total])
 
 	return isOpen ? (
 		<div className='lmj-cart'>
